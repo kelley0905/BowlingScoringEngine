@@ -1,0 +1,31 @@
+﻿@model IList<BowlingScoringEngine.Models.Frame>
+
+<h2>Score Your Bowling Game</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+
+        @for (int i = 0; i < Model.Count - 1; i++)
+        {
+        <div>
+            @{
+                var frameCount = i + 1;
+                <em>Frame: @frameCount</em><br />
+                @Html.TextBoxFor(m => Model[i].FirstScore)
+                @Html.ValidationMessageFor(m => Model[i].FirstScore, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(m => Model[i].SecondScore)
+                @Html.ValidationMessageFor(m => Model[i].SecondScore, "", new { @class = "text-danger" })
+            }
+        </div>
+        }
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Calculate Score" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
