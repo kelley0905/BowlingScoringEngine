@@ -10,13 +10,15 @@
             @{
                 var frameCount = i + 1;
                 <em>Frame: @frameCount</em><br />
-                @Html.DisplayFor(m => Model[i].FirstScore)
-                @Html.DisplayFor(m => Model[i].SecondScore)
             }
+            @Html.DisplayFor(m => Model[i].FirstScore)
+            &nbsp;&nbsp;
+            @Html.DisplayFor(m => Model[i].SecondScore)
             <br /><br />
             <strong>Total:</strong> @Html.DisplayFor(m => Model[i].Total)
         </div>
     }
+
     @Html.BeginForm()
     {
     <div class="form-group">
@@ -25,6 +27,8 @@
         </div>
     </div>
     }
+
+
 
 </div>
 

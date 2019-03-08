@@ -19,9 +19,9 @@ namespace BowlingScoringEngine.Business_Logic
             return frames;
         }
 
-        public static void CalculateScore(IList<Frame> frames)
+        public static void CalculateScore(IList<Frame> frames, TenthFrame lastFrame)
         {
-            GetFormattedFrames(frames);
+            GetFormattedFrames(frames, lastFrame);
             for (int i = 0; i < frames.Count; i++)
             {
                 var nextFrameIndex = i + 1;
@@ -54,39 +54,57 @@ namespace BowlingScoringEngine.Business_Logic
                     frames[i].Total += frames[i - 1].Total;
                 }
             }
+
         }
 
-        private static void GetFormattedFrames(IList<Frame> frames)
+        private static void GetFormattedFrames(IList<Frame> frames, TenthFrame lastFrame)
         {
             foreach (var frame in frames)
             {
-                //strikes
-                if (frame.FirstScore.ToLower() == "x" || frame.FirstScore == "10")
+                FormatFrame(frame);
+            }
+            FormatFrame(lastFrame);
+            //strikes
+            if (lastFrame.ThirdScore.ToLower() == "x" || lastFrame.FirstScore == "10")
+            {
+                lastFrame.FirstScoreNumber = 10;
+                lastFrame.Status = ScoreType.Strike;
+            }
+            else
+            {
+                lastFrame.FirstScoreNumber = Convert.ToInt16(lastFrame.FirstScore);
+                lastFrame.Status = ScoreType.OpenFrame;
+            }
+        }
+
+        private static void FormatFrame(Frame frame)
+        {
+            //strikes
+            if (frame.FirstScore.ToLower() == "x" || frame.FirstScore == "10")
+            {
+                frame.FirstScoreNumber = 10;
+                frame.Status = ScoreType.Strike;
+            }
+            else
+            {
+                frame.FirstScoreNumber = Convert.ToInt16(frame.FirstScore);
+                frame.Status = ScoreType.OpenFrame;
+            }
+            //spares
+            if (frame.SecondScore == "/")
+            {
+                frame.SecondScoreNumber = 10 - frame.FirstScoreNumber;
+                frame.Status = ScoreType.Spare;
+            }
+            else
+            {
+                frame.SecondScoreNumber = Convert.ToInt16(frame.SecondScore);
+                if (frame.Status != ScoreType.Strike)
                 {
-                    frame.FirstScoreNumber = 10;
-                    frame.Status = ScoreType.Strike;
-                }
-                else
-                {
-                    frame.FirstScoreNumber = Convert.ToInt16(frame.FirstScore);
                     frame.Status = ScoreType.OpenFrame;
-                }
-                //spares
-                if (frame.SecondScore == "/")
-                {
-                    frame.SecondScoreNumber = 10 - frame.FirstScoreNumber;
-                    frame.Status = ScoreType.Spare;
-                }
-                else
-                {
-                    frame.SecondScoreNumber = Convert.ToInt16(frame.SecondScore);
-                    if (frame.Status != ScoreType.Strike)
+                    if (frame.FirstScoreNumber + frame.SecondScoreNumber == 10)
                     {
-                        frame.Status = ScoreType.OpenFrame;
-                        if (frame.FirstScoreNumber + frame.SecondScoreNumber == 10)
-                        {
-                            frame.Status = ScoreType.Spare;
-                        }
+                        frame.Status = ScoreType.Spare;
                     }
                 }
             }

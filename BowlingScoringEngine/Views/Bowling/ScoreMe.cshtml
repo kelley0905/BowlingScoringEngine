@@ -1,4 +1,4 @@
-﻿@model IList<BowlingScoringEngine.Models.Frame>
+﻿@model BowlingScoringEngine.ViewModels.BowlingViewModel  
 
 <h2>Score Your Bowling Game</h2>
 
@@ -8,20 +8,30 @@
 
     <div class="row">
 
-        @for (int i = 0; i < Model.Count - 1; i++)
+        @for (int i = 0; i < Model.NineFrames.Count; i++)
         {
         <div>
             @{
                 var frameCount = i + 1;
+                var errorId = "frame" + frameCount.ToString();
                 <em>Frame: @frameCount</em><br />
-                @Html.TextBoxFor(m => Model[i].FirstScore)
-                @Html.ValidationMessageFor(m => Model[i].FirstScore, "", new { @class = "text-danger" })
-                @Html.TextBoxFor(m => Model[i].SecondScore)
-                @Html.ValidationMessageFor(m => Model[i].SecondScore, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(m => Model.NineFrames[i].FirstScore)
+                @Html.ValidationMessageFor(m => Model.NineFrames[i].FirstScore, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(m => Model.NineFrames[i].SecondScore)
+                @Html.ValidationMessageFor(m => Model.NineFrames[i].SecondScore, "", new { @class = "text-danger" })
+                <p id=@errorId class="text-danger"></p>
             }
         </div>
         }
-
+        <div>
+            <em>Frame: 10</em><br />
+            @Html.TextBoxFor(m => Model.LastFrame.FirstScore)
+            @Html.ValidationMessageFor(m => Model.LastFrame.FirstScore, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(m => Model.LastFrame.SecondScore)
+            @Html.ValidationMessageFor(m => Model.LastFrame.SecondScore, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(m => Model.LastFrame.ThirdScore)
+            @Html.ValidationMessageFor(m => Model.LastFrame.ThirdScore, "", new { @class = "text-danger" })
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Calculate Score" class="btn btn-default" />

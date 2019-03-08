@@ -8,6 +8,7 @@ namespace BowlingScoringEngine.ViewModels
 {
     public class BowlingViewModel
     {
-        public List<Frame> AllFrames { get; set; }
+        public List<Frame> NineFrames { get; set; }
+        public TenthFrame LastFrame { get; set; }
     }
 }

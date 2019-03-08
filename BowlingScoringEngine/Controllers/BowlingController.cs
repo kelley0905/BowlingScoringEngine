@@ -1,5 +1,6 @@
 ﻿using BowlingScoringEngine.Business_Logic;
 using BowlingScoringEngine.Models;
+using BowlingScoringEngine.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,15 +29,18 @@ namespace BowlingScoringEngine.Controllers
         public ActionResult ScoreMe()
         {
             List<Frame> frames = ScoringEngine.SetupFrames();
-
-            return View(frames);
+            var model = new BowlingViewModel();
+            model.NineFrames = frames;
+            model.LastFrame = new TenthFrame { FirstScore = "0", SecondScore = "0", ThirdScore = "0" };
+            //return View(frames);
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult ScoreMe(IList<Frame> frames)
+        public ActionResult ScoreMe(BowlingViewModel viewModel)
         {
-            ScoringEngine.CalculateScore(frames);
-            TempData["frames"] = frames;
+            ScoringEngine.CalculateScore(viewModel.NineFrames, viewModel.LastFrame);
+            TempData["frames"] = viewModel.NineFrames;
             return RedirectToAction("Index");
         }
 
